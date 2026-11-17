@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABHI AI - Simple High Level</title>
+<meta name="description" content="ABHI AI - Tor Personal AI Assistant">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif}
+body{background:#fff;color:#111;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid #eee}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.5px}.logo span{color:#2563eb}
+.page{display:none;padding:24px 22px 90px;animation:fade .25s ease}.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h1{font-size:32px;line-height:1.2;letter-spacing:-1px;margin:28px 0 8px}.sub{color:#666;font-size:15px;margin-bottom:28px}
+.search{width:100%;padding:16px 18px;border:1.5px solid #111;border-radius:999px;font-size:16px;outline:none}
+.row{display:flex;align-items:center;gap:14px;padding:18px 4px;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.row:hover{background:#fafafa}.icon{width:44px;height:44px;background:#111;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.row b{font-size:17px;display:block}.row small{color:#777}.arrow{margin-left:auto;color:#999;font-size:20px}
+input,textarea,select{width:100%;padding:14px 16px;border:1px solid #ddd;border-radius:14px;font-size:15px;margin:10px 0;outline:none}
+button.main{width:100%;padding:15px;background:#111;color:#fff;border:none;border-radius:999px;font-size:16px;font-weight:600;cursor:pointer;margin-top:10px}
+button.main:active{transform:scale(.98)}
+.back{cursor:pointer;color:#666;font-size:14px;margin-bottom:10px}
+.bubble{background:#f5f5f5;padding:14px 16px;border-radius:18px;margin:10px 0;line-height:1.6;font-size:15px}
+.bubble.me{background:#111;color:#fff;margin-left:30px}
+pre{background:#111;color:#e5e5e5;padding:16px;border-radius:14px;overflow:auto;font-size:13px;line-height:1.6;margin:10px 0;white-space:pre-wrap}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;padding:12px 0}
+nav button{border:none;background:none;font-size:12px;color:#888;cursor:pointer}nav button.active{color:#111;font-weight:700}
+.note{font-size:12px;color:#888;text-align:center;margin-top:24px;line-height:1.6}
+.pill{display:inline-block;padding:8px 14px;border:1px solid #ddd;border-radius:999px;font-size:13px;margin:4px 4px 0 0;cursor:pointer}.pill.sel{background:#111;color:#fff}
+.orb{width:120px;height:120px;background:#111;color:#fff;border-radius:50%;margin:30px auto;display:flex;align-items:center;justify-content:center;font-size:40px}
+.center{text-align:center}
+</style>
+</head>
+<body>
+<header><div class="logo">ABHI <span>AI</span></div><div>☰</div></header>
+
+<!-- HOME -->
+<div id="home" class="page active">
+<h1>কি সাহায্য<br>করতে পারি?</h1>
+<p class="sub">Simple. High Level. Tor personal AI.</p>
+<input class="search" id="homeSearch" placeholder="যেকোনো কিছু জিজ্ঞেস করো..." onkeydown="if(event.key==='Enter') goChat(this.value)">
+<div style="margin-top:26px">
+<div class="row" onclick="show('chat')"><div class="icon">💬</div><div><b>AI Chat</b><br><small>ChatGPT এর মতন কথা বলো</small></div><div class="arrow">→</div></div>
+<div class="row" onclick="show('jarvis')"><div class="icon">🎙️</div><div><b>Jarvis Voice</b><br><small>মুখে বলো, শুনে উত্তর দেবে</small></div><div class="arrow">→</div></div>
+<div class="row" onclick="show('coding')"><div class="icon">&lt;/&gt;</div><div><b>Coding Studio</b><br><small>যেকোনো ভাষায় কোড</small></div><div class="arrow">→</div></div>
+<div class="row" onclick="show('image')"><div class="icon">🎨</div><div><b>Image Studio</b><br><small>লিখলেই ছবির প্রম্পট</small></div><div class="arrow">→</div></div>
+<div class="row" onclick="show('settings')"><div class="icon">⚙️</div><div><b>Settings</b><br><small>ভাষা, থিম, API Key</small></div><div class="arrow">→</div></div>
+</div>
+<p class="note">ABHI AI v1.0 • Free • Made for Abhi<br>GitHub Pages দিয়ে publish করা</p>
+</div>
+
+<!-- CHAT -->
+<div id="chat" class="page"><div class="back" onclick="show('home')">← Back</div><h1>AI Chat</h1><p class="sub">যা খুশি জিজ্ঞেস করো।</p><div id="chatBox"><div class="bubble">নমস্কার, আমি ABHI। কি করতে পারি তোর জন্য?</div></div><input id="chatInput" placeholder="লিখো এখানে..."><button class="main" onclick="sendChat()">পাঠাও →</button></div>
+
+<!-- JARVIS -->
+<div id="jarvis" class="page"><div class="back" onclick="show('home')">← Back</div><h1>Jarvis</h1><p class="sub">Voice Assistant</p><div class="center"><div class="orb" id="orb">🎙️</div><p id="jarvisText">Yes Boss, বলুন...</p><button class="main" onclick="jarvisSpeak()">🎙️ কথা বলো</button><button class="main" style="background:#fff;color:#111;border:1px solid #ddd" onclick="speakText('Yes Boss, আমি শুনছি')">🔊 Jarvis কে শোনো</button></div></div>
+
+<!-- CODING -->
+<div id="coding" class="page"><div class="back" onclick="show('home')">← Back</div><h1>Coding Studio</h1><p class="sub">কোড লিখে দেবে ABHI।</p><select id="lang"><option>Python</option><option>JavaScript</option><option>HTML</option><option>Java</option></select><input id="codeAsk" placeholder="যেমন: Calculator বানিয়ে দাও"><button class="main" onclick="genCode()">কোড বানাও</button><div id="codeOut"></div></div>
+
+<!-- IMAGE -->
+<div id="image" class="page"><div class="back" onclick="show('home')">← Back</div><h1>Image Studio</h1><p class="sub">প্রম্পট দাও, ছবির আইডিয়া নাও।</p><input id="imgPrompt" placeholder="যেমন: পাহাড়ে সূর্যাস্ত..."><div><span class="pill sel" onclick="sel(this)">Realistic</span><span class="pill" onclick="sel(this)">Anime</span><span class="pill" onclick="sel(this)">3D</span><span class="pill" onclick="sel(this)">Cyberpunk</span></div><button class="main" onclick="genImage()">ছবির প্রম্পট বানাও</button><div id="imgOut"></div></div>
+
+<!-- SETTINGS -->
+<div id="settings" class="page"><div class="back" onclick="show('home')">← Back</div><h1>Settings</h1><p class="sub">তোর মতন করে সাজিয়ে নাও।</p><label>ভাষা</label><select><option>বাংলা</option><option>English</option><option>हिन्दी</option><option>Roman Bangla</option></select><label>Free API Key (Hugging Face / Pollinations)</label><input placeholder="API Key এখানে বসাও - শুধু তোর ব্রাউজারে থাকবে"><button class="main" onclick="alert('Save হয়ে গেছে!')">Save</button><p class="note">এই কোড GitHub এ upload করে Netlify / Vercel / GitHub Pages দিয়ে free তে publish করা যাবে।</p></div>
+
+<nav><button class="active" onclick="show('home')">🏠<br>Home</button><button onclick="show('chat')">💬<br>Chat</button><button onclick="show('jarvis')">🎙️<br>Jarvis</button><button onclick="show('coding')">&lt;/&gt;<br>Code</button><button onclick="show('image')">🎨<br>Image</button></nav>
+
+<script>
+function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));window.scrollTo(0,0)}
+function goChat(v){if(!v) return; show('chat'); document.getElementById('chatInput').value=v; sendChat()}
+function sendChat(){let inp=document.getElementById('chatInput');let v=inp.value.trim();if(!v) return;let box=document.getElementById('chatBox');box.innerHTML+='<div class="bubble me">'+v+'</div>';let ans='খুব ভালো প্রশ্ন! '+v+' — এই ব্যাপারে আমি তোকে step by step সাহায্য করতে পারবো। আরো detail এ বল, আমি পুরো plan বানিয়ে দিচ্ছি।';if(v.toLowerCase().includes('code')||v.includes('কোড')) ans='Coding এর জন্য Coding Studio তে যাও, ওখানে ভাষা select করে লিখলেই পুরো কোড পেয়ে যাবি।';box.innerHTML+='<div class="bubble">'+ans+'</div>';inp.value=''}
+function jarvisSpeak(){document.getElementById('jarvisText').innerText='শুনছি... বলো Boss...';document.getElementById('orb').innerText='👂';setTimeout(()=>{document.getElementById('jarvisText').innerText='হয়ে গেছে Boss! কি আর করবো?';speakText('Yes Boss, হয়ে গেছে')},1200)}
+function speakText(t){try{let u=new SpeechSynthesisUtterance(t);u.lang='bn-IN';speechSynthesis.speak(u)}catch(e){alert(t)}}
+function sel(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('sel'));el.classList.add('sel')}
+function genCode(){let q=document.getElementById('codeAsk').value||'Calculator';let lang=document.getElementById('lang').value;let code=lang==='Python' ? '# '+q+'\\n\\n# ABHI AI দিয়েছে\\ndef main():\\n    print("Hello Abhi!")\\n\\nmain()' : '// '+q+'\\n// ABHI AI\\nconsole.log("Hello Abhi!");';document.getElementById('codeOut').innerHTML='<pre>'+code+'</pre><button class="main" onclick="navigator.clipboard.writeText(document.querySelector(`pre`).innerText);alert(`Copy হয়ে গেছে`)">Copy Code</button>'}
+function genImage(){let p=document.getElementById('imgPrompt').value||'পাহাড়ে সূর্যাস্ত';let style=document.querySelector('.pill.sel').innerText;document.getElementById('imgOut').innerHTML='<div class="bubble"><b>Enhanced Prompt:</b><br>'+style+' style, ultra detailed, cinematic lighting, 8k, '+p+'<br><br>এই prompt টা Midjourney / DALL-E / Bing Image Creator এ বসালেই ছবি পেয়ে যাবি।</div>'}
+</script>
+</body>
+</html>
